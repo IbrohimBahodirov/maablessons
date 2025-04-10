@@ -1,131 +1,116 @@
-CREATE TABLE Employees (
-    EmpID INT,
-    Name VARCHAR(50),
-    Salary DECIMAL(10, 2)
-);
+create database lesson_2_homework
+use lesson_2_homework
+ 
+ create table employees(
+ empid int primary key,
+ name varchar(50),
+ salary decimal(10,2)
+ )
+
+ select * from employees;
+
+ insert into employees (empid,Name,salary)
+values (10,'john',1000),
+       (20,'jack',2000),
+     (30,'jerry',3000);
 
 
-INSERT INTO Employees (EmpID, Name, Salary) VALUES (1, 'Alice', 5000.00);
-INSERT INTO Employees (EmpID, Name, Salary) 
-VALUES 
-    (2, 'Bob', 6000.00),
-    (3, 'Charlie', 5500.00);
+update employees set salary=4000 where empid=1;
+
+delete from employees where empid=2;
+
+alter table employees 
+alter column name varchar(100);
+
+alter table employees add department varchar (50);
 
 
-UPDATE Employees SET Salary = 5200.00 WHERE EmpID = 1;
+select * from employees;   
+
+alter table employees
+alter column salary float;
 
 
-DELETE FROM Employees WHERE EmpID = 2;
+create table Departs(
+departid int primary key,
+departname varchar(50)
+)
 
+select * from Departs;
 
-CREATE TABLE TestTable (ID INT, Name VARCHAR(50));
-INSERT INTO TestTable VALUES (1, 'Test'), (2, 'Sample');
+truncate table employees;
 
+insert into Departs (departid,departname)
+select top 5 empid,Name
+from employees;
 
-DELETE FROM TestTable WHERE ID = 1;
+update employees set department ='manegement'where salary>1300
 
+select * from employees; 
 
-TRUNCATE TABLE TestTable;
+alter table employees
+drop column department;
 
+exec sp_rename 'employees','staffmembers1';
 
-DROP TABLE TestTable;
+select * from staffmembers
 
+Drop table Departs;
 
-ALTER TABLE Employees ALTER COLUMN Name VARCHAR(100);
-
--
-ALTER TABLE Employees ADD Department VARCHAR(50);
-
-
-ALTER TABLE Employees ALTER COLUMN Salary FLOAT;
-
-
-CREATE TABLE Departments (
-    DepartmentID INT PRIMARY KEY,
-    DepartmentName VARCHAR(50)
-);
-
-
-DELETE FROM Employees;
-
- Insert into Departments using SELECT
-INSERT INTO Departments (DepartmentID, DepartmentName)
-SELECT DeptID, DeptName FROM ExistingDepartments;
-
-
-UPDATE Employees SET Department = 'Management' WHERE Salary > 5000;
-
-
-DELETE FROM Employees;
-
-
-ALTER TABLE Employees DROP COLUMN Department;
-
-
-EXEC sp_rename 'Employees', 'StaffMembers';
-
-
-DROP TABLE Departments;
-
-
-CREATE TABLE Products (
-    ProductID INT PRIMARY KEY,
+create table products(
+  ProductID INT PRIMARY KEY,
     ProductName VARCHAR(100),
     Category VARCHAR(50),
-    Price DECIMAL(10, 2),
-    CreatedAt DATETIME
-);
+    Price DECIMAL(10,2),
+    StockQuantity INT
+)
+select * from products;
 
+alter table products
+add constraint check_price check(Price>0)
 
-ALTER TABLE Products 
-ADD CONSTRAINT chk_price_positive CHECK (Price > 0);
+alter table products
+add StockQuantity int default 50
 
+exec sp_rename 'products.Category','Productcategory','column'
 
-ALTER TABLE Products 
-ADD StockQuantity INT DEFAULT 50;
+select * from products;
 
+INSERT INTO Products (ProductID, ProductName, Productcategory, Price, StockQuantity)
+VALUES (1, 'Laptop', 'Electronics', 1200.00, 30);
 
-EXEC sp_rename 'Products.Category', 'ProductCategory', 'COLUMN';
+INSERT INTO Products (ProductID, ProductName, Productcategory, Price, StockQuantity)
+VALUES (2, 'Smartphone', 'Electronics', 800.00, 50);
 
+INSERT INTO Products (ProductID, ProductName, Productcategory, Price, StockQuantity)
+VALUES (3, 'Chair', 'Furniture', 150.00, 100);
 
-INSERT INTO Products (ProductID, ProductName, ProductCategory, Price, CreatedAt)
-VALUES 
-    (1, 'Laptop', 'Electronics', 1000.00, GETDATE()),
-    (2, 'Phone', 'Electronics', 600.00, GETDATE()),
-    (3, 'Desk', 'Furniture', 150.00, GETDATE()),
-    (4, 'Chair', 'Furniture', 100.00, GETDATE()),
-    (5, 'Pen', 'Stationery', 2.50, GETDATE());
+INSERT INTO Products (ProductID, ProductName, Productcategory, Price, StockQuantity)
+VALUES (4, 'Notebook', 'Stationery', 2.50, 500);
 
+INSERT INTO Products (ProductID, ProductName, Productcategory, Price, StockQuantity)
+VALUES (5, 'Water Bottle', 'Accessories', 10.00, 200);
 
-SELECT * INTO Products_Backup FROM Products;
+select * from products;
 
+select * into products_backup
+from products
 
-EXEC sp_rename 'Products', 'Inventory';
+exec sp_rename 'products','inventory';
+select * from inventory;
 
+alter table inventory add constraint  check_price  check (price>0)
 
-ALTER TABLE Inventory ALTER COLUMN Price FLOAT;
+alter table inventory
+alter column price float;
 
+alter table inventory add constraint check_price 
 
-CREATE TABLE Inventory_New (
-    ProductCode INT IDENTITY(1000, 5),
-    ProductID INT PRIMARY KEY,
-    ProductName VARCHAR(100),
-    ProductCategory VARCHAR(50),
-    Price FLOAT,
-    CreatedAt DATETIME,
-    StockQuantity INT DEFAULT 50
-);
+INSERT INTO inventory (ProductID, ProductName, Productcategory, Price, StockQuantity)
+VALUES (23332, 'Water Bottle', 'Accessories', 25, 100);
 
+select * from inventory;
 
-INSERT INTO Inventory_New (ProductID, ProductName, ProductCategory, Price, CreatedAt, StockQuantity)
-SELECT ProductID, ProductName, ProductCategory, Price, CreatedAt, StockQuantity FROM Inventory;
+alter table inventory add productcode int identity(1000,5);
 
-
-DROP TABLE Inventory;
-EXEC sp_rename 'Inventory_New', 'Inventory';
-
-
-
-
-
-
+select * from inventory;
